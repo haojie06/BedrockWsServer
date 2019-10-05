@@ -1,0 +1,31 @@
+{
+  "name": "bedrockwsserver",
+  "version": "1.0.0",
+  "description": "WebSocket Server for Minecraft Bedrock Edition",
+  "main": "index.js",
+  "dependencies": {
+    "@types/node": "^12.7.11",
+    "@types/ws": "^6.0.3",
+    "typescript": "^3.6.3",
+    "ws": "^7.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haojie06/BedrockWsServer.git"
+  },
+  "keywords": [
+    "minecraft",
+    "bedrock",
+    "websocket"
+  ],
+  "author": "haojie06",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/haojie06/BedrockWsServer/issues"
+  },
+  "homepage": "https://github.com/haojie06/BedrockWsServer#readme"
+}
