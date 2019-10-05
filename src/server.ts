@@ -12,6 +12,7 @@ export class WSServer extends EventEmitter{
         this._socket.on("connection",(socket,request)=>{
             console.log("客户端连接");
         
+            //当socket收到信息时回调
             socket.on("message", function(message) {
                 let data = JSON.parse(message as string);
 
@@ -26,6 +27,8 @@ export class WSServer extends EventEmitter{
                         break;
                 }
             });
+
+            socket.on("close", () => {console.log("客户端断开连接")});
         
         });
     }
