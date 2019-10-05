@@ -16,15 +16,12 @@ export class WSServer extends EventEmitter{
             socket.on("message", function(message) {
                 let data = JSON.parse(message as string);
 
-                switch(data.header.messagePurpose){
-                    case "error":
-                        console.log("Error recieved:", data);
-                        break;
-
-                    case "event":
-                        //if(server.eventNames().indexOf(data.body.eventName) === -1) return;
-                        console.log(data.body.eventName);
-                        break;
+                let msgPurpose = data.header.messagePurpose;
+                if(msgPurpose == "error"){
+                    console.log("Error recieved:", data);
+                }
+                else{
+                    console.log(data.body.eventName);
                 }
             });
 

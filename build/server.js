@@ -12,14 +12,12 @@ class WSServer extends events_1.EventEmitter {
             //当socket收到信息时回调
             socket.on("message", function (message) {
                 let data = JSON.parse(message);
-                switch (data.header.messagePurpose) {
-                    case "error":
-                        console.log("Error recieved:", data);
-                        break;
-                    case "event":
-                        //if(server.eventNames().indexOf(data.body.eventName) === -1) return;
-                        console.log(data.body.eventName);
-                        break;
+                let msgPurpose = data.header.messagePurpose;
+                if (msgPurpose == "error") {
+                    console.log("Error recieved:", data);
+                }
+                else {
+                    console.log(data.body.eventName);
                 }
             });
             socket.on("close", () => { console.log("客户端断开连接"); });
