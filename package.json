@@ -7,6 +7,7 @@
 		"@types/node": "^12.7.11",
 		"@types/ws": "^6.0.3",
 		"typescript": "^3.6.3",
+		"uuid": "^3.3.3",
 		"ws": "^7.1.2"
 	},
 	"devDependencies": {},
@@ -18,7 +19,11 @@
 		"type": "git",
 		"url": "git+https://github.com/haojie06/BedrockWsServer.git"
 	},
-	"keywords": [ "minecraft", "bedrock", "websocket" ],
+	"keywords": [
+		"minecraft",
+		"bedrock",
+		"websocket"
+	],
 	"author": "haojie06",
 	"license": "ISC",
 	"bugs": {

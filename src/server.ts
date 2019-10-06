@@ -14,8 +14,13 @@ export class WSServer extends EventEmitter{
         
             //当socket收到信息时回调
             socket.on("message", function(message) {
+                console.log(message);
+                socket.send("已收到",(err)=>{
+                    if(err){
+                        console.log("返回信息出错");
+                    }
+                });
                 let data = JSON.parse(message as string);
-
                 let msgPurpose = data.header.messagePurpose;
                 if(msgPurpose == "error"){
                     console.log("Error recieved:", data);
