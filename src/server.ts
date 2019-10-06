@@ -78,6 +78,9 @@ export class WSServer extends EventEmitter{
             if(cmd == "send"){
                 server.emit("sendMsg",content);
             }
+            else if(cmd == "exit"){
+                process.exit();
+            }
         });
 
     }
