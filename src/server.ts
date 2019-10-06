@@ -52,7 +52,7 @@ export class WSServer extends EventEmitter{
             //接收到控制台的发送信息事件
             server.on("sendMsg",msg=>{
                 console.log("[sendMsg]:" + msg);
-                sendCommand(socket,"/say hello");
+                sendCommand(socket,`say ${msg}`);
             });
 
             socket.on("error",err=>{
@@ -73,6 +73,7 @@ export class WSServer extends EventEmitter{
             console.log(`[consoleInput]：${input}`);
             let [cmd,content] = input.split(":");
             if(cmd == "send"){
+                //触发sendMsg事件
                 server.emit("sendMsg",content);
             }
             else if(cmd == "exit"){
