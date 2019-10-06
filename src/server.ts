@@ -1,6 +1,7 @@
 import { Server } from 'ws';
 import {EventEmitter} from 'events';
 import { Socket } from 'net';
+let uuidv4 = require('uuid/v4'); 
 export class WSServer extends EventEmitter{
     //strictPropertyInitialization:false
     _socket:Server;
@@ -13,11 +14,26 @@ export class WSServer extends EventEmitter{
         console.log("WS开始监听" + port);
         this._socket.on("connection",socket => {
             console.log("客户端连接");
+
+            //发送subscribe包建立监听
+            let uuid = uuidv4();
+            socket.send({
+                body:{
+                    "eventName": "BlockPlaced"
+                },
+                header:{
+                    requestId: uuid,
+                    messagePurpose: "subscribe",
+                    version: 1,
+                    messageType: "commandRequest"
+                }
+            });
+
+
+
             //当socket收到信息时回调
             socket.on("message", message => {
                 console.log("接收到信息");
-                console.log(socket.url);
-                /*
                 
                 let data = JSON.parse(message as string);
                 let msgPurpose = data.header.messagePurpose;
@@ -27,7 +43,11 @@ export class WSServer extends EventEmitter{
                 else{
                     console.log(data.body.eventName);
                 }
-                */
+                
+            });
+
+            socket.on("error",err=>{
+                console.log("建立的socket出现错误" + err.message);
             });
 
             //socket.on("close", () => {console.log("客户端断开连接")});
