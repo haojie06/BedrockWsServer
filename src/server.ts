@@ -42,7 +42,7 @@ export class WSServer extends EventEmitter{
                     console.log(data.body.eventName);
                     //console.log(data.body.properties);
                     //测试unsubscribe,解除对破坏事件的监听 ?难道需要相同的requestid？不需要
-                    unRegisterSubscribe(socket,"PlayerMessage");
+                    unRegisterSubscribe(socket,"BlockPlaced");
                     //let usPacket:UnSubscribe = new UnSubscribe("BlockBroken");
                     //socket.send(JSON.stringify(usPacket));
                 }

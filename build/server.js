@@ -32,8 +32,9 @@ class WSServer extends events_1.EventEmitter {
                 }
                 else if (msgPurpose == "event") {
                     console.log(data.body.eventName);
-                    console.log(data.body.properties.Block);
+                    //console.log(data.body.properties);
                     //测试unsubscribe,解除对破坏事件的监听 ?难道需要相同的requestid？不需要
+                    unRegisterSubscribe(socket, "PlayerMessage");
                     //let usPacket:UnSubscribe = new UnSubscribe("BlockBroken");
                     //socket.send(JSON.stringify(usPacket));
                 }
@@ -62,11 +63,18 @@ class WSServer extends events_1.EventEmitter {
             if (cmd == "send") {
                 server.emit("sendMsg", content);
             }
+            else if (cmd == "exit") {
+                process.exit();
+            }
         });
     }
 }
 exports.WSServer = WSServer;
 function registerSubscribe(socket, eventName) {
     let packet = new packet_1.Subscribe(eventName);
+    socket.send(JSON.stringify(packet));
+}
+function unRegisterSubscribe(socket, eventName) {
+    let packet = new packet_1.UnSubscribe(eventName);
     socket.send(JSON.stringify(packet));
 }
