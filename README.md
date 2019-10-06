@@ -20,6 +20,8 @@ bds和stoneserver都是可以使用/connect命令的，我们需要在server.pro
 - 发送commandrequest包，执行一条命令
     
     在后台中输入 send:message 即可游戏中执行/say message命令
+    
+- 在后台输入 exit 即可退出，当然直接ctrl + c也是可以的。
 
 *这是我的第一个nodejs程序😀，虽然ws功能有限，但是还是挺有意思的*
 > 参考
