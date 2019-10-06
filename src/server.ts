@@ -16,8 +16,9 @@ export class WSServer extends EventEmitter{
             //当socket收到信息时回调
             socket.on("message", message => {
                 console.log("接收到信息");
-                /*
                 console.log(socket.url);
+                /*
+                
                 let data = JSON.parse(message as string);
                 let msgPurpose = data.header.messagePurpose;
                 if(msgPurpose == "error"){
@@ -30,6 +31,10 @@ export class WSServer extends EventEmitter{
             });
 
             //socket.on("close", () => {console.log("客户端断开连接")});
+        });
+
+        this._socket.on("error",error=>{
+            console.log(`出现错误${error}`);
         });
     }
 }
