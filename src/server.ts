@@ -41,7 +41,10 @@ export class WSServer extends EventEmitter{
                 else if(msgPurpose == "event"){
                     console.log(data.body.eventName);
                     //发送unsubscribe包，取消对该事件的监听，具体表现为服务端只能获得一次客户端的方块放置事件
-                    unRegisterSubscribe(socket,"BlockPlaced");
+                    if (data.body.eventName == "BlockPlaced"){
+                        sendCommand(socket,`say 发送unsubscribe包解除对方块放置事件的监听`);
+                        unRegisterSubscribe(socket,"BlockPlaced");
+                    }
 
                 }
                 else if(msgPurpose == "commandResponse"){
