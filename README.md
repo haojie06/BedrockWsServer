@@ -1,4 +1,5 @@
 # Minecraft Bedrock WebSocket Server Demo
+欢迎查看我的[博客文章](https://www.haojie06.me/2019/10/06/Minecraft-websocket%E6%9C%8D%E5%8A%A1%E5%99%A8/) 有更详细的介绍
 ## 如何使用？
 ```bash
 git clone https://github.com/haojie06/BedrockWsServer.git
@@ -20,7 +21,7 @@ bds和stoneserver都是可以使用/connect命令的，我们需要在server.pro
 - 发送commandrequest包，执行一条命令
     
     在后台中输入 send:message 即可游戏中执行/say message命令
-    
+
 - 在后台输入 exit 即可退出，当然直接ctrl + c也是可以的。
 
 *这是我的第一个nodejs程序😀，虽然ws功能有限，但是还是挺有意思的*
