@@ -1,15 +1,17 @@
+import { Packet,UnSubscribe,Subscribe } from './packet/packet';
 import { Server } from 'ws';
 import {EventEmitter} from 'events';
 import { Socket } from 'net';
 import {createInterface} from 'readline';
+//import {v4} from 'uuid';
+let uuid4 = require('uuid/v4');
 //创建一个负责输入输出的对象
 const rl = createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-//import {v4} from 'uuid';
-let uuid4 = require('uuid/v4')
+
 export class WSServer extends EventEmitter{
     //strictPropertyInitialization:false
     _socket:Server;
@@ -24,21 +26,8 @@ export class WSServer extends EventEmitter{
             console.log("客户端连接");
             
             //发送subscribe包建立监听
-            let uuid = uuid4();
-            let packet = {
-                body:{
-                    "eventName": "BlockPlaced"
-                },
-                header:{
-                    requestId: uuid,
-                    messagePurpose: "subscribe",
-                    version: 1,
-                    messageType: "commandRequest"
-                }
-            };
+            let packet:Packet = new Subscribe("BlockBroken");
             socket.send(JSON.stringify(packet));
-
-
 
             //当socket收到信息时回调
             socket.on("message", message => {
@@ -47,10 +36,11 @@ export class WSServer extends EventEmitter{
                 let data = JSON.parse(message as string);
                 let msgPurpose = data.header.messagePurpose;
                 if(msgPurpose == "error"){
-                    console.log("Error recieved:", data);
+                    console.log("出现错误:", data);
                 }
                 else{
                     console.log(data.body.eventName);
+                    console.log(data.body.properties);
                 }
                 
             });
@@ -61,10 +51,6 @@ export class WSServer extends EventEmitter{
 
             socket.on("close", () => {console.log("客户端断开连接")});
 
-            server.on("disconnect",()=>{
-                console.log("断开连接");
-                socket.close();
-            });
         });
 
         this._socket.on("error",error=>{
@@ -75,9 +61,9 @@ export class WSServer extends EventEmitter{
         //持续获得用户输入
         rl.on('line', (input) => {
             console.log(`接收到：${input}`);
-            if(input == "断开连接"){
+            let cmd,content = input.split(":");
+            if(cmd == "输出"){
                 server.emit("disconnect");
-                
             }
         });
 
