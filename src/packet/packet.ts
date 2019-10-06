@@ -6,8 +6,15 @@ export abstract class Packet{
 }
 
 export class Subscribe extends Packet{
-    body:{}
-    header:{}
+    body:{
+        eventName: string;
+    };
+    header:{
+        requestId: string;
+        messagePurpose: string;
+        version: number;
+        messageType: string;
+    };
 
     constructor(eventName:string){
         super();
@@ -25,21 +32,31 @@ export class Subscribe extends Packet{
 }
 
 export class UnSubscribe extends Packet{
-    body : {};
-	header: {}
+    body:{
+        eventName: string;
+    };
+    header:{
+        requestId: string;
+        messagePurpose: string;
+        version: number;
+        messageType: string;
+    }
     
-    constructor(eventName:string){
+    constructor(eventName:string,uuid = uuid4()){
         super();
+
+
         this.body = {
             eventName: eventName
         };
 
         this.header = {
-            requestId: uuid4,
+            requestId: uuid,
             messagePurpose: "unsubscribe",
             version: 1,
             messageType: "commandRequest"
         }
+
     }
 }
 

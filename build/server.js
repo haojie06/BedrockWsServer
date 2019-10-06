@@ -21,6 +21,7 @@ class WSServer extends events_1.EventEmitter {
             console.log("客户端连接");
             //发送subscribe包建立监听
             let packet = new packet_1.Subscribe("BlockBroken");
+            console.log("建立监听请求的uuid" + packet.header.requestId);
             socket.send(JSON.stringify(packet));
             //当socket收到信息时回调
             socket.on("message", message => {
@@ -32,8 +33,18 @@ class WSServer extends events_1.EventEmitter {
                 }
                 else {
                     console.log(data.body.eventName);
-                    console.log(data.body.properties);
+                    console.log(data.body.properties.Block);
+                    //测试unsubscribe,解除对破坏事件的监听 ?难道需要相同的requestid？
+                    let usPacket = new packet_1.UnSubscribe("BlockBroken", packet.header.requestId);
+                    console.log("解除请求packet的uuid" + usPacket.header.requestId);
+                    socket.send(JSON.stringify(packet));
                 }
+            });
+            //接收到控制台的发送信息事件
+            server.on("sendMsg", msg => {
+                let packet = new packet_1.CommandPacket('say ' + msg);
+                console.log("发送信息");
+                socket.send(packet);
             });
             socket.on("error", err => {
                 console.log("建立的socket出现错误" + err.message);
@@ -47,8 +58,8 @@ class WSServer extends events_1.EventEmitter {
         rl.on('line', (input) => {
             console.log(`接收到：${input}`);
             let cmd, content = input.split(":");
-            if (cmd == "输出") {
-                server.emit("disconnect");
+            if (cmd == "发送信息") {
+                server.emit("sendMsg", content);
             }
         });
     }
