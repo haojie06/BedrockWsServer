@@ -18,7 +18,7 @@ export class WSServer extends EventEmitter{
 
             //发送subscribe包建立监听
             let uuid = uuid4();
-            socket.send({
+            let packet = {
                 body:{
                     "eventName": "BlockPlaced"
                 },
@@ -28,7 +28,8 @@ export class WSServer extends EventEmitter{
                     version: 1,
                     messageType: "commandRequest"
                 }
-            });
+            };
+            socket.send(JSON.stringify(packet));
 
 
 
