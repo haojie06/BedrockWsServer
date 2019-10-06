@@ -26,10 +26,8 @@ export class WSServer extends EventEmitter{
             console.log("客户端连接");
             
             //发送subscribe包建立监听
-            let packet:Subscribe = new Subscribe("BlockBroken");
-            socket.send(JSON.stringify(packet));
-            packet = new Subscribe("ItemDropped");
-            socket.send(JSON.stringify(packet));
+            registerSubscribe(socket,"PlayerMessage");
+            registerSubscribe(socket,"BlockPlaced");
 
             //当socket收到信息时回调
             socket.on("message", message => {
@@ -44,8 +42,8 @@ export class WSServer extends EventEmitter{
                     console.log(data.body.eventName);
                     console.log(data.body.properties.Block);
                     //测试unsubscribe,解除对破坏事件的监听 ?难道需要相同的requestid？不需要
-                    let usPacket:UnSubscribe = new UnSubscribe("BlockBroken");
-                    socket.send(JSON.stringify(usPacket));
+                    //let usPacket:UnSubscribe = new UnSubscribe("BlockBroken");
+                    //socket.send(JSON.stringify(usPacket));
                 }
                 else if(msgPurpose == "commandResponse"){
                     console.log("命令返回：" + data.body.statusCode);
@@ -82,4 +80,9 @@ export class WSServer extends EventEmitter{
         });
 
     }
+}
+
+function registerSubscribe(socket:any,eventName:string):void{
+    let packet:Subscribe = new Subscribe(eventName);
+    socket.send(JSON.stringify(packet));
 }

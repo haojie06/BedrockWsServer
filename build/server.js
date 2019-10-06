@@ -20,29 +20,32 @@ class WSServer extends events_1.EventEmitter {
         this._socket.on("connection", socket => {
             console.log("客户端连接");
             //发送subscribe包建立监听
-            let packet = new packet_1.Subscribe("BlockBroken");
-            socket.send(JSON.stringify(packet));
+            registerSubscribe(socket, "PlayerMessage");
+            registerSubscribe(socket, "BlockPlaced");
             //当socket收到信息时回调
             socket.on("message", message => {
-                console.log("接收到信息");
+                console.log("接收到客户端的信息");
                 let data = JSON.parse(message);
                 let msgPurpose = data.header.messagePurpose;
                 if (msgPurpose == "error") {
                     console.log("出现错误:", data);
                 }
-                else {
+                else if (msgPurpose == "event") {
                     console.log(data.body.eventName);
                     console.log(data.body.properties.Block);
                     //测试unsubscribe,解除对破坏事件的监听 ?难道需要相同的requestid？不需要
-                    let usPacket = new packet_1.UnSubscribe("BlockBroken");
-                    socket.send(JSON.stringify(packet));
+                    //let usPacket:UnSubscribe = new UnSubscribe("BlockBroken");
+                    //socket.send(JSON.stringify(usPacket));
+                }
+                else if (msgPurpose == "commandResponse") {
+                    console.log("命令返回：" + data.body.statusCode);
                 }
             });
             //接收到控制台的发送信息事件
             server.on("sendMsg", msg => {
-                let packet = new packet_1.CommandPacket('say ' + msg);
-                console.log("发送信息");
-                socket.send(packet);
+                let cpacket = new packet_1.CommandPacket('say Hello');
+                console.log("[sendMsg]:" + msg);
+                socket.send(JSON.stringify(cpacket));
             });
             socket.on("error", err => {
                 console.log("建立的socket出现错误" + err.message);
@@ -54,9 +57,8 @@ class WSServer extends events_1.EventEmitter {
         });
         //持续获得用户输入
         rl.on('line', (input) => {
-            console.log(`接收到：${input}`);
+            console.log(`[consoleInput]：${input}`);
             let [cmd, content] = input.split(":");
-            console.log(cmd + ":" + content);
             if (cmd == "send") {
                 server.emit("sendMsg", content);
             }
@@ -64,3 +66,7 @@ class WSServer extends events_1.EventEmitter {
     }
 }
 exports.WSServer = WSServer;
+function registerSubscribe(socket, eventName) {
+    let packet = new packet_1.Subscribe(eventName);
+    socket.send(JSON.stringify(packet));
+}
