@@ -40,11 +40,9 @@ export class WSServer extends EventEmitter{
                 }
                 else if(msgPurpose == "event"){
                     console.log(data.body.eventName);
-                    //console.log(data.body.properties);
-                    //测试unsubscribe,解除对破坏事件的监听 ?难道需要相同的requestid？不需要
+                    //发送unsubscribe包，取消对该事件的监听，具体表现为服务端只能获得一次客户端的方块放置事件
                     unRegisterSubscribe(socket,"BlockPlaced");
-                    //let usPacket:UnSubscribe = new UnSubscribe("BlockBroken");
-                    //socket.send(JSON.stringify(usPacket));
+
                 }
                 else if(msgPurpose == "commandResponse"){
                     console.log("命令返回：" + data.body.statusCode);
@@ -53,9 +51,8 @@ export class WSServer extends EventEmitter{
             });
             //接收到控制台的发送信息事件
             server.on("sendMsg",msg=>{
-                let cpacket:Packet = new CommandPacket('say Hello');
                 console.log("[sendMsg]:" + msg);
-                socket.send(JSON.stringify(cpacket));
+                sendCommand(socket,"/say hello");
             });
 
             socket.on("error",err=>{
@@ -93,5 +90,10 @@ function registerSubscribe(socket:any,eventName:string):void{
 
 function unRegisterSubscribe(socket:any,eventName:string):void{
     let packet:UnSubscribe = new UnSubscribe(eventName);
+    socket.send(JSON.stringify(packet));
+}
+
+function sendCommand(socket:any,command:string):void{
+    let packet:CommandPacket = new CommandPacket(command);
     socket.send(JSON.stringify(packet));
 }

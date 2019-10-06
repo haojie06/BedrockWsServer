@@ -76,7 +76,7 @@ export class CommandPacket extends Packet{
         };
 
         this.header = {
-            requestId: uuid4,
+            requestId: uuid4(),
             messagePurpose: "commandRequest",
             version: 1,
             messageType: "commandRequest"
