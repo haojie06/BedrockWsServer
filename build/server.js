@@ -11,12 +11,6 @@ class WSServer extends events_1.EventEmitter {
             console.log("客户端连接");
             //当socket收到信息时回调
             socket.on("message", function (message) {
-                console.log(message);
-                socket.send("已收到", (err) => {
-                    if (err) {
-                        console.log("返回信息出错");
-                    }
-                });
                 let data = JSON.parse(message);
                 let msgPurpose = data.header.messagePurpose;
                 if (msgPurpose == "error") {
@@ -25,6 +19,7 @@ class WSServer extends events_1.EventEmitter {
                 else {
                     console.log(data.body.eventName);
                 }
+                console.log(message);
             });
             socket.on("close", () => { console.log("客户端断开连接"); });
         });
