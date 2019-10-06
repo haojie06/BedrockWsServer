@@ -1,7 +1,8 @@
 import { Server } from 'ws';
 import {EventEmitter} from 'events';
 import { Socket } from 'net';
-let uuidv4 = require('uuid/v4'); 
+//import {v4} from 'uuid';
+let uuid4 = require('uuid/v4')
 export class WSServer extends EventEmitter{
     //strictPropertyInitialization:false
     _socket:Server;
@@ -16,7 +17,7 @@ export class WSServer extends EventEmitter{
             console.log("客户端连接");
 
             //发送subscribe包建立监听
-            let uuid = uuidv4();
+            let uuid = uuid4();
             socket.send({
                 body:{
                     "eventName": "BlockPlaced"

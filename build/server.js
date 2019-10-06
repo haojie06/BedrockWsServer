@@ -2,15 +2,32 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const ws_1 = require("ws");
 const events_1 = require("events");
+//import {v4} from 'uuid';
+let uuid4 = require('uuid/v4');
 class WSServer extends events_1.EventEmitter {
     listen(port) {
+        let server = this;
         this._socket = new ws_1.Server({ port: port });
         //当有客户端连接时回调
         console.log("WS开始监听" + port);
-        this._socket.on("connection", (socket, request) => {
+        this._socket.on("connection", socket => {
             console.log("客户端连接");
+            //发送subscribe包建立监听
+            let uuid = uuid4();
+            socket.send({
+                body: {
+                    "eventName": "BlockPlaced"
+                },
+                header: {
+                    requestId: uuid,
+                    messagePurpose: "subscribe",
+                    version: 1,
+                    messageType: "commandRequest"
+                }
+            });
             //当socket收到信息时回调
-            socket.on("message", function (message) {
+            socket.on("message", message => {
+                console.log("接收到信息");
                 let data = JSON.parse(message);
                 let msgPurpose = data.header.messagePurpose;
                 if (msgPurpose == "error") {
@@ -19,9 +36,14 @@ class WSServer extends events_1.EventEmitter {
                 else {
                     console.log(data.body.eventName);
                 }
-                console.log(message);
             });
-            socket.on("close", () => { console.log("客户端断开连接"); });
+            socket.on("error", err => {
+                console.log("建立的socket出现错误" + err.message);
+            });
+            //socket.on("close", () => {console.log("客户端断开连接")});
+        });
+        this._socket.on("error", error => {
+            console.log(`出现错误${error}`);
         });
     }
 }
