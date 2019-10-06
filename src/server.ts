@@ -27,12 +27,11 @@ export class WSServer extends EventEmitter{
             
             //发送subscribe包建立监听
             let packet:Subscribe = new Subscribe("BlockBroken");
-            console.log("建立监听请求的uuid" + packet.header.requestId);
             socket.send(JSON.stringify(packet));
 
             //当socket收到信息时回调
             socket.on("message", message => {
-                console.log("接收到信息");
+                console.log("接收到客户端的信息");
                 
                 let data = JSON.parse(message as string);
                 let msgPurpose = data.header.messagePurpose;
@@ -42,9 +41,8 @@ export class WSServer extends EventEmitter{
                 else{
                     console.log(data.body.eventName);
                     console.log(data.body.properties.Block);
-                    //测试unsubscribe,解除对破坏事件的监听 ?难道需要相同的requestid？
-                    let usPacket:UnSubscribe = new UnSubscribe("BlockBroken",packet.header.requestId);
-                    console.log("解除请求packet的uuid" + usPacket.header.requestId);
+                    //测试unsubscribe,解除对破坏事件的监听 ?难道需要相同的requestid？不需要
+                    let usPacket:UnSubscribe = new UnSubscribe("BlockBroken");
                     socket.send(JSON.stringify(packet));
                 }
                 
@@ -52,7 +50,7 @@ export class WSServer extends EventEmitter{
             //接收到控制台的发送信息事件
             server.on("sendMsg",msg=>{
                 let packet:Packet = new CommandPacket('say ' + msg);
-                console.log("发送信息");
+                console.log("[sendMsg]:" + msg);
                 socket.send(packet);
             });
 
@@ -71,9 +69,9 @@ export class WSServer extends EventEmitter{
 
         //持续获得用户输入
         rl.on('line', (input) => {
-            console.log(`接收到：${input}`);
-            let cmd,content = input.split(":");
-            if(cmd == "发送信息"){
+            console.log(`[consoleInput]：${input}`);
+            let [cmd,content] = input.split(":");
+            if(cmd == "send"){
                 server.emit("sendMsg",content);
             }
         });
