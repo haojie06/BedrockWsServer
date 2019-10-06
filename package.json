@@ -13,7 +13,7 @@
 	},
 	"devDependencies": {},
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
+		"test": "git fetch --all && git reset --hard remotes/origin/master && npm run build",
 		"build": "tsc && node build/app.js"
 	},
 	"repository": {
