@@ -32,6 +32,7 @@ class WSServer extends events_1.EventEmitter {
                 }
                 else {
                     console.log(data.body.eventName);
+                    console.log(data.body.properties);
                 }
             });
             socket.on("error", err => {
