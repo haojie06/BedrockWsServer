@@ -40,7 +40,7 @@ export class WSServer extends EventEmitter{
                 }
                 else if(msgPurpose == "event"){
                     console.log(data.body.eventName);
-                    console.log(data.body.properties.Block);
+                    console.log(data.body.properties);
                     //测试unsubscribe,解除对破坏事件的监听 ?难道需要相同的requestid？不需要
                     //let usPacket:UnSubscribe = new UnSubscribe("BlockBroken");
                     //socket.send(JSON.stringify(usPacket));
