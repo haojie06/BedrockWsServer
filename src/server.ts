@@ -6,15 +6,16 @@ export class WSServer extends EventEmitter{
     _socket:Server;
 
     public listen(port:number):void{
+        let server:WSServer = this;
+
         this._socket = new Server({port:port});
         //当有客户端连接时回调
         console.log("WS开始监听" + port);
         this._socket.on("connection",(socket,request)=>{
             console.log("客户端连接");
-        
             //当socket收到信息时回调
             socket.on("message", function(message) {
-            
+                console.log(socket.url);
                 let data = JSON.parse(message as string);
                 let msgPurpose = data.header.messagePurpose;
                 if(msgPurpose == "error"){
@@ -23,10 +24,9 @@ export class WSServer extends EventEmitter{
                 else{
                     console.log(data.body.eventName);
                 }
-                console.log(message);
             });
 
-            socket.on("close", () => {console.log("客户端断开连接")});
+            //socket.on("close", () => {console.log("客户端断开连接")});
         
         });
     }
