@@ -1,6 +1,13 @@
 import { Server } from 'ws';
 import {EventEmitter} from 'events';
 import { Socket } from 'net';
+import {createInterface} from 'readline';
+//创建一个负责输入输出的对象
+const rl = createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
 //import {v4} from 'uuid';
 let uuid4 = require('uuid/v4')
 export class WSServer extends EventEmitter{
@@ -15,7 +22,7 @@ export class WSServer extends EventEmitter{
         console.log("WS开始监听" + port);
         this._socket.on("connection",socket => {
             console.log("客户端连接");
-
+            
             //发送subscribe包建立监听
             let uuid = uuid4();
             let packet = {
@@ -52,11 +59,27 @@ export class WSServer extends EventEmitter{
                 console.log("建立的socket出现错误" + err.message);
             });
 
-            //socket.on("close", () => {console.log("客户端断开连接")});
+            socket.on("close", () => {console.log("客户端断开连接")});
+
+            server.on("disconnect",()=>{
+                console.log("断开连接");
+                socket.close();
+            });
         });
 
         this._socket.on("error",error=>{
             console.log(`出现错误${error}`);
         });
+
+
+        //持续获得用户输入
+        rl.on('line', (input) => {
+            console.log(`接收到：${input}`);
+            if(input == "断开连接"){
+                server.emit("disconnect");
+                
+            }
+        });
+
     }
 }

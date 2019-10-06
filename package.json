@@ -14,17 +14,13 @@
 	"devDependencies": {},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"build": "tsc"
+		"build": "tsc && node build/app.js"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/haojie06/BedrockWsServer.git"
 	},
-	"keywords": [
-		"minecraft",
-		"bedrock",
-		"websocket"
-	],
+	"keywords": [ "minecraft", "bedrock", "websocket" ],
 	"author": "haojie06",
 	"license": "ISC",
 	"bugs": {
