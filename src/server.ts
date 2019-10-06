@@ -1,4 +1,4 @@
-import { Packet,UnSubscribe,Subscribe } from './packet/packet';
+import { Packet,UnSubscribe,Subscribe,CommandPacket } from './packet/packet';
 import { Server } from 'ws';
 import {EventEmitter} from 'events';
 import { Socket } from 'net';
@@ -40,9 +40,17 @@ export class WSServer extends EventEmitter{
                 }
                 else{
                     console.log(data.body.eventName);
-                    console.log(data.body.properties);
+                    console.log(data.body.properties.Block);
+                    //测试unsubscribe,解除对破坏事件的监听
+                    let packet:Packet = new UnSubscribe("BlockBroken");
+                    socket.send(JSON.stringify(packet));
                 }
                 
+            });
+            //接收到控制台的发送信息事件
+            server.on("sendMsg",msg=>{
+                let packet:Packet = new CommandPacket('say ' + msg);
+                socket.send(packet);
             });
 
             socket.on("error",err=>{
@@ -62,8 +70,8 @@ export class WSServer extends EventEmitter{
         rl.on('line', (input) => {
             console.log(`接收到：${input}`);
             let cmd,content = input.split(":");
-            if(cmd == "输出"){
-                server.emit("disconnect");
+            if(cmd == "发送信息"){
+                server.emit("sendMsg");
             }
         });
 

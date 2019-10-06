@@ -42,3 +42,27 @@ export class UnSubscribe extends Packet{
         }
     }
 }
+
+export class CommandPacket extends Packet{
+    body:{};
+    header:{};
+
+    constructor(cmd:string){
+        super();
+        this.body = {
+            origin: 
+            {
+                type: "player"
+            },
+            commandLine: cmd,
+            version: 1
+        };
+
+        this.header = {
+            requestId: uuid4,
+            messagePurpose: "commandRequest",
+            version: 1,
+            messageType: "commandRequest"
+        };
+    }
+}
