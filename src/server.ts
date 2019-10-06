@@ -51,7 +51,7 @@ export class WSServer extends EventEmitter{
             server.on("sendMsg",msg=>{
                 let packet:Packet = new CommandPacket('say ' + msg);
                 console.log("[sendMsg]:" + msg);
-                socket.send(packet);
+                socket.send(JSON.stringify(packet));
             });
 
             socket.on("error",err=>{
